@@ -64,16 +64,15 @@ Resources:
 
 
   S3Bucket:
-    Type: 'AWS::S3::Bucket'
+    Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
       BucketName: !Ref BucketName
-      ServerSideEncryptionConfiguration:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-              SSEAlgorithm: 'aws:kms'
-            # KMSMasterKeyID: !Ref myKey
-              KMSMasterKeyID: !GetAtt myKey.Arn   # This returns kms key. This is more better
-  
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !GetAtt myKey.Arn
 
   LambdaRole:
       Type: 'AWS::IAM::Role'
