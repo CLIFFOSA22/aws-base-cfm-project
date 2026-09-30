@@ -17,7 +17,8 @@ Parameters:
 
   Ami:
     Type: AWS::EC2::Image::Id
-    Description: "Select AMI"
+    Description: "Enter AMI"
+    Default: ""
 
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
