@@ -1,0 +1,69 @@
+Parameters:
+
+  VpcCidr:
+    Type: String
+    Description: "Enter VPC CIDR"
+    Default: ""
+
+  SubnetCidr:
+    Type: String
+    Description: "Enter subnet CIDR"
+    Default: ""
+
+  InstanceType:
+    Type: String
+    Description: "Enter instance type"
+    Default: ""
+
+  Ami:
+    Type: AWS::EC2::Image::Id
+    Description: "Select AMI"
+
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: "Select your key pair"
+
+
+Resources:
+
+  # Create VPC
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+
+  # Create Subnet
+  MySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: !Ref SubnetCidr
+      MapPublicIpOnLaunch: true
+
+
+  # Create Security Group
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP traffic
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+
+  # Create EC2
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref Ami
+      KeyName: !Ref KeyPair
+      SubnetId: !Ref MySubnet
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
